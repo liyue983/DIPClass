@@ -12,17 +12,17 @@ def load_images_from_folder(fd):
     for filename in os.listdir(fd):
         img = cv2.imread(os.path.join(fd,filename))
         if (img is not None):
-            imgs.append(togray(img))
+            imgs.append(to_gray(img))
     return imgs
 
-def togray(img):
+def to_gray(img):
     return cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
 
 def main():
-    originpath = "red.png"
-    targetfolder = "dev"
-    origin = togray(cv2.imread(originpath))
+    originpath = "lena.png"
+    targetfolder = "dev2"
+    origin = to_gray(cv2.imread(originpath))
     targetimgs = load_images_from_folder(targetfolder)
 
     for i in range(len(targetimgs)):
@@ -42,8 +42,6 @@ def main():
     cv2.imshow('images',ht)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-  
-
 
 
 if __name__=="__main__":
