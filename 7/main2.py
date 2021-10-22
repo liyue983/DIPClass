@@ -13,8 +13,8 @@ def mouse_down(e,x,y,flags,params):
 
 cv2.imshow("origin",img)
 
-pts1 = np.float32([[79,106],[75,289],[183,38],[169,345]])
-pts2 = np.float32([[79,106],[79,289],[185,38],[183,345]])
+pts1 = np.float32([[19,0],[12,503],[364,2],[336,418]])
+pts2 = np.float32([[12,0],[12,503],[364,0],[364,420]])
 M = cv2.getPerspectiveTransform(pts1,pts2)
 dst = cv2.warpPerspective(img,M,(cols,rows))
 cv2.imshow("toushi",dst)
