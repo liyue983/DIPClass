@@ -11,7 +11,7 @@ def on_mouse(e,x,y,f,p):
 
 def do_math(img,fn):
     rows, cols = img.shape
-    nimg = np.zeros((rows, cols), np.int64)
+    nimg = np.zeros((rows, cols), np.float32)
     for i in range(rows):
         for j in range(cols):
             nimg[i][j] = fn(img[i][j])
