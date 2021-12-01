@@ -33,7 +33,7 @@ plt.subplot(121),plt.imshow(20*np.log(f+1),cmap='gray')
 # plt.show()
 
 # cv2.setMouseCallback("fft",on_mouse)
-mask = np.zeros((rows, cols, 2), np.uint8)
+mask = np.zeros((rows, cols, 2), np.float32)
 for i in range(rows):
     for j in range(cols):
         mask[i][j] = 1
@@ -51,10 +51,10 @@ mask[131:134, 169:177] = 0
 
 m = 5
 l = 5
-mask[int(rows / 2 - m):int(rows / 2 + m), int(cols / 2 - l):int(cols / 2 + l)] = 0
-k1 = 2
-k2 = 2
-mask[int(rows / 2 - k1):int(rows / 2 + k1), int(cols / 2 - k2):int(cols / 2 + k2)] = 1
+mask[int(rows / 2 - m):int(rows / 2 + m+1), int(cols / 2 - l):int(cols / 2 + l+1)] = 0
+k1 = 1
+k2 = 1
+mask[int(rows / 2 - k1):int(rows / 2 + k1+1), int(cols / 2 - k2):int(cols / 2 + k2+1)] = 1
 
 
 
@@ -70,11 +70,23 @@ f_ishift = np.fft.ifftshift(fshift) # fftshit()函数的逆函数，它将频谱
 img_back = cv2.idft(f_ishift)/(rows*cols) # 将频率域转化回空间域，输出是一个复数，cv2.idft()返回的是一个双通道图像
 img_back2 = cv2.magnitude(img_back[:, :, 0], img_back[:, :, 1]) # idft[:,:,0]求得实部，用idft[:,:,1]求得虚部。
 
+##直方图
+plt.figure()
+plt.hist(img_back2.ravel(), 256)
 
 ##局部直方图均衡
 img_back3 = np.uint8(img_back2)
-clahe = cv2.createCLAHE(clipLimit=5, tileGridSize=(17,17))
+clahe = cv2.createCLAHE(clipLimit=5, tileGridSize=(23,23))
 img_back3 = clahe.apply(img_back3)
+
+
+##图像增强
+img_back4 = np.uint8(img_back2*1.5)
+kernel_1 = np.array([[-1,-1,-1],
+                        [-1,9,-1],
+                        [-1,-1,-1]])
+img_back4 = cv2.filter2D(img_back4,-1,kernel_1)
+cv2.imshow('c',(img_back4))
 
 plt.figure()
 plt.subplot(131), plt.imshow(img, cmap='gray')
