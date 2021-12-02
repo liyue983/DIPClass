@@ -24,17 +24,23 @@ for i in range(rows):
 
 ##竖直大条纹
 # mask[120:135, 193:199] = 0 # mask[120:135, 193:199] = 0
-# mask[128:145, 153:159] = 0 # mask[128:145, 153:159] = 0
-mask[120:135, 190:200] = 0# mask[120:135, 190:200] = 0
-mask[128:145, 155:165] = 0# mask[128:145, 155:165] = 0
-mask[120:135, 184:188] = 0
-mask[128:145, 167:171] = 0
-##竖直小条纹
-mask[:, 80:100] = 0 # mask[110:145, 80:100] = 0
-mask[:, 255:275] = 0 # mask[110:145, 255:275] = 0
-##大黑纹
-mask[127:131, 174:180] = 0 # mask[127:131, 174:180] = 0
-mask[132:136, 171:177] = 0 # mask[132:136, 171:177] = 0
+# # mask[128:145, 153:159] = 0 # mask[128:145, 153:159] = 0
+# mask[120:135, 190:200] = 0# mask[120:135, 190:200] = 0
+# mask[128:145, 155:165] = 0# mask[128:145, 155:165] = 0
+# mask[120:135, 184:188] = 0
+# mask[128:145, 167:171] = 0
+# ##竖直小条纹
+# mask[:, 80:100] = 0 # mask[110:145, 80:100] = 0
+# mask[:, 255:275] = 0 # mask[110:145, 255:275] = 0
+# ##大黑纹
+# mask[127:131, 174:180] = 0 # mask[127:131, 174:180] = 0
+# mask[132:136, 171:177] = 0 # mask[132:136, 171:177] = 0
+m = 125 # 越小越清晰，越大越糊
+n = 50 # 越小越糊，越大越清晰
+mask[int(rows / 2 - m):int(rows / 2 + m), int(cols / 2 - m):int(cols / 2 + m)] = 0
+mask[int(rows / 2 - n):int(rows / 2 + n), int(cols / 2 - n):int(cols / 2 + n)] = 1
+mask[126:136,150:200]=0
+mask[129:133,172:178]=1
 
 ##与mask相乘
 fshift = dft_shift * mask
@@ -43,25 +49,6 @@ f_ishift = np.fft.ifftshift(fshift) # fftshit()函数的逆函数，它将频谱
 img_back = cv2.idft(f_ishift)/(rows*cols) # 将频率域转化回空间域，输出是一个复数，cv2.idft()返回的是一个双通道图像
 img_back2 = cv2.magnitude(img_back[:, :, 0], img_back[:, :, 1]) # idft[:,:,0]求得实部，用idft[:,:,1]求得虚部。
 
-##直方图
-plt.figure()
-plt.hist(((img_back2)).ravel(), 256)
-
-##局部直方图均衡
-img_back3 = np.uint8(img_back2)
-clahe = cv2.createCLAHE(clipLimit=4, tileGridSize=(5,5))
-img_back3 = clahe.apply(img_back3)
-plt.figure(),plt.hist((np.uint8(img_back3)).ravel(), 256)
-# plt.figure(),plt.imshow(img_back3,cmap='gray')
-cv2.imshow('back3',img_back3)
-
-##图像增强
-img_back4 = np.uint8(img_back2)
-kernel_1 = np.float32([[0,-1,0],
-                        [-1,6,-1],
-                        [0,-1,0]])
-img_back4 = cv2.filter2D(img_back3,-1,kernel_1)
-cv2.imshow('back4',(img_back4))
 
 plt.figure()
 plt.subplot(121),plt.imshow(img_back2,cmap='gray')

@@ -99,7 +99,7 @@ kernel_1 = np.float32([[0,-1,0],
                         [-1,5,-1],
                         [0,-1,0]])
 img_back4 = cv2.filter2D(img_back3,-1,kernel_1)
-cv2.imshow('back4',(img_back4))
+# cv2.imshow('back4',(img_back4))
 
 ##试一试对比度拉伸
 def stretch(x):
