@@ -39,22 +39,24 @@ for i in range(rows):
         mask[i][j] = 1
 
 mask[120:135, 184:188] = 0
-mask[120:135, 190:200] = 0
-mask[128:145, 155:165] = 0
+mask[120:135, 190:200] = 0# mask[120:135, 190:200] = 0
+mask[128:145, 155:165] = 0# mask[128:145, 155:165] = 0
 mask[128:145, 167:171] = 0
 mask[:, 80:100] = 0 # mask[110:145, 80:100] = 0
 mask[:, 255:275] = 0 # mask[110:145, 255:275] = 0
 
 mask[126:130, 173:180] = 0
 mask[131:134, 169:177] = 0
+# mask[:, 174:176] = 0
+
 
 
 m = 5
 l = 5
-mask[int(rows / 2 - m):int(rows / 2 + m+1), int(cols / 2 - l):int(cols / 2 + l+1)] = 0
+mask[int(rows / 2 - m):int(rows / 2 + m+1), int(cols / 2 - l):int(cols / 2 + l+1)] = 0.01
 k1 = 1
 k2 = 1
-mask[int(rows / 2 - k1):int(rows / 2 + k1+1), int(cols / 2 - k2):int(cols / 2 + k2+1)] = 1
+mask[int(rows / 2 - k1):int(rows / 2 + k1+1), int(cols / 2 - k2):int(cols / 2 + k2+1)] = 1.3
 
 
 
@@ -72,14 +74,14 @@ f_ishift = np.fft.ifftshift(fshift) # fftshit()函数的逆函数，它将频谱
 img_back = cv2.idft(f_ishift)/(rows*cols) # 将频率域转化回空间域，输出是一个复数，cv2.idft()返回的是一个双通道图像
 img_back2 = cv2.magnitude(img_back[:, :, 0], img_back[:, :, 1]) # idft[:,:,0]求得实部，用idft[:,:,1]求得虚部。
 
-plt.figure()
-# plt.hist(20*np.log(f[:, 80:100]+1).ravel(),512)
-localf = f[:, 80:100].copy()
-plt.subplot(221),plt.hist(20*np.log(localf+1).ravel(),512)
-plt.subplot(223),plt.imshow(20*np.log(localf+1),cmap='gray')
-localf[20*np.log(localf+1)>140]=(math.e**(100/20))
-plt.subplot(222),plt.hist(20*np.log(localf+1).ravel(),512)
-plt.subplot(224),plt.imshow(20*np.log(localf+1),cmap='gray')
+# plt.figure()
+# # plt.hist(20*np.log(f[:, 80:100]+1).ravel(),512)
+# localf = f[:, 80:100].copy()
+# plt.subplot(221),plt.hist(20*np.log(localf+1).ravel(),512)
+# plt.subplot(223),plt.imshow(20*np.log(localf+1),cmap='gray')
+# localf[20*np.log(localf+1)>140]=(math.e**(100/20))
+# plt.subplot(222),plt.hist(20*np.log(localf+1).ravel(),512)
+# plt.subplot(224),plt.imshow(20*np.log(localf+1),cmap='gray')
 
 ##直方图
 plt.figure()
@@ -93,17 +95,17 @@ img_back3 = clahe.apply(img_back3)
 
 ##图像增强
 img_back4 = np.uint8(img_back2)
-kernel_1 = np.array([[-1,-1,-1],
-                        [-1,9,-1],
-                        [-1,-1,-1]])
-img_back4 = cv2.filter2D(img_back4,-1,kernel_1)
-cv2.imshow('c',(img_back4))
+kernel_1 = np.float32([[0,-1,0],
+                        [-1,5,-1],
+                        [0,-1,0]])
+img_back4 = cv2.filter2D(img_back3,-1,kernel_1)
+cv2.imshow('back4',(img_back4))
 
 ##试一试对比度拉伸
 def stretch(x):
-    x1=70
-    x2=140
-    y1=40
+    x1=100
+    x2=170
+    y1=20
     y2=245
     if x<=0:return 0 
     if x>=255:return 255
