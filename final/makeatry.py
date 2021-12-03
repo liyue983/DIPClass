@@ -42,9 +42,12 @@ n = 50 # 越小越糊，越大越清晰
 # mask[int(rows / 2 - n):int(rows / 2 + n), int(cols / 2 - n):int(cols / 2 + n)] = 1
 mask[:, 80:100] = 0 # mask[110:145, 80:100] = 0
 mask[:, 255:275] = 0 # mask[110:145, 255:275] = 0
+
+# mask[110:145, 33:55] = 0 # mask[110:145, 255:275] = 0
+# mask[110:145, 297:318] = 0 # mask[110:145, 255:275] = 0
 ##竖直大条纹
-# mask[120:135, 190:200] = 0.1#mask[120:135, 190:200] = 0.6
-# mask[128:145, 155:165] = 0.1#mask[128:145, 155:165] = 0.6
+mask[120:135, 190:200] = 0.1#mask[120:135, 190:200] = 0.6
+mask[128:145, 155:165] = 0.1#mask[128:145, 155:165] = 0.6
 # mask[120:135, 184:188] = 0
 # mask[128:145, 167:171] = 0
 
@@ -94,11 +97,23 @@ plt.figure(),plt.imshow(img_back5,cmap='gray')
 
 ##中值滤波
 img_median = cv2.medianBlur(np.uint8(img_back2), 5)
-kernel_1 = np.array([[0,1,0],
-                        [1,2,1],
-                        [0,1,0]],np.float32)/6
-img_median = cv2.filter2D(img_median,-1,kernel_1) 
+# kernel_1 = np.array([[0,1,0],
+#                         [1,2,1],
+#                         [0,1,0]],np.float32)/6
+# img_median = cv2.filter2D(img_median,-1,kernel_1) 
 plt.figure('median'),plt.imshow(img_median,cmap='gray'),plt.title('median')
+clahe = cv2.createCLAHE(clipLimit=5, tileGridSize=(25,25))
+img_back3 = clahe.apply(img_median)
+plt.figure('local'),plt.imshow(img_back3,cmap='gray'),plt.title('local')
+
+
+##二值
+ret,thresh1 = cv2.threshold(img_back3,90,255,cv2.THRESH_BINARY)
+plt.figure('bin'),plt.imshow(thresh1,cmap='gray')
+th3 = cv2.adaptiveThreshold(img_median,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
+# th3 = cv2.medianBlur(th3, 5)
+plt.figure('adptive'),plt.imshow(th3,cmap='gray')
 
 plt.figure()
 plt.subplot(121),plt.imshow(img_back2,cmap='gray')
