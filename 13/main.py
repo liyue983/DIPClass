@@ -22,8 +22,15 @@ img_name = 'building2.jpg'
 img_rgb = cv2.imread(img_name)
 img = cv2.imread(img_name,cv2.IMREAD_GRAYSCALE)
 
+x1 = 270
+y1 = 213
+x2 = 369
+y2 = img.shape[0]#517
+mask = np.zeros(img.shape, np.uint8)
+mask[y1:y2,x1:x2]=1
+img = img*mask
 
-ret,thresh1 = cv2.threshold(cv2.medianBlur(img,11),110,255,cv2.THRESH_BINARY)
+ret,thresh1 = cv2.threshold(cv2.medianBlur(img,11),110,255,cv2.THRESH_BINARY_INV)
 plt.figure('bin'),plt.imshow(thresh1,cmap='gray')
 # th3 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
 #             cv2.THRESH_BINARY,11,2)

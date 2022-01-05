@@ -29,7 +29,7 @@ for c in cnts:
     # cv2.rectangle(img, (x, y), (x + w,y + h), (255, 255, 255), 3)
 
 (x, y, w, h) = cv2.boundingRect(most_possible)
-# cv2.rectangle(img, (x, y), (x + w,y + h), (255, 255, 255), 3)
+cv2.rectangle(img, (x, y), (x + w,y + h), (255, 255, 255), 3)
 
 result_mask = np.zeros(img.shape)
 result_mask[y:y+h,x:x+w]=1
